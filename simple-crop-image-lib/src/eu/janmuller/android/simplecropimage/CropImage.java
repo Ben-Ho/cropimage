@@ -129,6 +129,12 @@ public class CropImage extends MonitoredActivity {
             }
 
             mImagePath = extras.getString(IMAGE_PATH);
+            String extension = mImagePath.substring(mImagePath.lastIndexOf(".")+1).toLowerCase();
+            if (extension.equals("jpg") || extension.equals("jpeg")) {
+                mOutputFormat = Bitmap.CompressFormat.JPEG;
+            } else if (extension.equals("png")) {
+                mOutputFormat = Bitmap.CompressFormat.PNG;
+            }
 
             mSaveUri = getImageUri(mImagePath);
             mBitmap = getBitmap(mImagePath);
@@ -312,7 +318,8 @@ public class CropImage extends MonitoredActivity {
         try {
 
             croppedImage = Bitmap.createBitmap(width, height,
-                    mCircleCrop ? Bitmap.Config.ARGB_8888 : Bitmap.Config.RGB_565);
+                mCircleCrop || mOutputFormat == Bitmap.CompressFormat.PNG ?
+                    Bitmap.Config.ARGB_8888 : Bitmap.Config.RGB_565);
         } catch (Exception e) {
             throw e;
         }
